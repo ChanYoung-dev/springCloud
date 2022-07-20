@@ -3,12 +3,15 @@ package com.example.demo.service;
 import com.example.demo.dto.UserDto;
 import com.example.demo.jpa.UserEntity;
 import com.example.demo.jpa.UserRepository;
+import com.example.demo.vo.ResponseOrder;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -32,5 +35,26 @@ public class UserServiceImpl implements UserService {
         UserDto returnUserDto = mapper.map(userEntity, UserDto.class);
 
         return returnUserDto;
+    }
+
+
+    @Override
+    public UserDto getUserByUserId(String userId) {
+        UserEntity userEntity = userRepository.findByUserId(userId);
+
+        if (userEntity == null)
+            return null;
+
+        UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
+
+        List<ResponseOrder> ordersList = new ArrayList<>();
+        userDto.setOrders(ordersList);
+
+        return userDto;
+    }
+
+    @Override
+    public Iterable<UserEntity> getUserByAll() {
+        return userRepository.findAll();
     }
 }
