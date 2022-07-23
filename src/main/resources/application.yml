@@ -39,6 +39,10 @@ logging:
         type: trace
         SQL: debug
 
+token:
+  expiration_time: 86400000
+  secret: user_token
+
 msa:
   domain: http://localhost:8090
   accountAPI: http://localhost:8090

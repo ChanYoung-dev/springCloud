@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -24,7 +26,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 
     /**
-     * 인증관련Configure
+     * 권한관련Configure
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -35,7 +37,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilter(getAuthenticationFilter());
 
-        http.headers().frameOptions().disable();
+        http.headers().frameOptions().disable(); // for H2 frame
 
     }
 
@@ -47,7 +49,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * 권한 관련 Configure
+     * 인증 관련 Configure
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
