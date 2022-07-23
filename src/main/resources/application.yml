@@ -32,6 +32,7 @@ eureka:
 logging:
   level:
     org:
+      com.example.demo: debug
       springframework:
         jdbc: debug
       hibernate:

@@ -20,6 +20,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     private final Environment env;
 
 
+    /**
+     * 인증관련Configure
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
@@ -28,9 +31,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .hasIpAddress("127.0.0.1")
                 .and()
                 .addFilter(getAuthenticationFilter());
-
-
-
 
         http.headers().frameOptions().disable();
 
@@ -44,7 +44,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * ㄱㅝㄴ한
+     * 권한 관련 Configure
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
