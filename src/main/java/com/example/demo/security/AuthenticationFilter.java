@@ -10,10 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -78,8 +82,25 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))
                 .compact();
 
+        ResponseCookie cookie = ResponseCookie.from("token", token)
+                .sameSite("Strict")
+                .path("/")
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString() + ";HttpOnly");
+
         response.addHeader("token", token);
+        System.out.println("token = " + token);
         response.addHeader("userId", userDetails.getUserId());
+        response.addHeader("Authorization","bearer " + token);
+
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authResult);
+        SecurityContextHolder.setContext(context);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth("bearer " + token);
+        //          chain.doFilter(request, response);
+
 
     }
 

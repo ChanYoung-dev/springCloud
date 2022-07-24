@@ -8,21 +8,25 @@ import com.example.demo.vo.ResponseUser;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/user-service")
 @RequiredArgsConstructor
+@EnableFeignClients
 public class UserController {
 
     private final Environment env;
     private final UserService userService;
+
 
 
     @GetMapping("/health_check")
@@ -55,7 +59,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    
+
 
 
 

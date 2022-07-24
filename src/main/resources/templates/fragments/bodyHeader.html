@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header class="mb-auto" th:fragment="bodyHeader">
+    <div>
+        <h3 class="float-md-start mb-0">SK HomeWork</h3>
+        <nav class="nav nav-masthead justify-content-center float-md-end">
+            <a class="nav-link" aria-current="page" th:onclick="|location.href='@{/)}'|" href="http://localhost:8090">Home</a>
+            <a class="nav-link" aria-current="page" th:onclick="|location.href='@{/auth/intro)}'|" href="http://localhost:8090/auth/intro">Intro</a>
+        </nav>
+    </div>
+</header>

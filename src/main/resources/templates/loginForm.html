@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko" class="h-100">
+<head th:replace="fragments/header :: header" />
+<body class="d-flex h-100 text-white text-center bg-dark">
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+  <div th:replace="fragments/bodyHeader :: bodyHeader" />
+  <main class="px-3">
+
+      <form name="loginForm" class="form-group px-5"> <!-- 요청 보내기-->
+        <div id="unableLogin" class="alert alert-danger alert-dismissible fade show" role="alert">
+          이메일과 비밀번호를 다시 확인해주세요.
+        </div>
+
+        <div class="mt-4">
+          <label for="id" class="sr-only fs-4">Id</label>
+          <input type="text" id="id" name="email" class="form-control" placeholder="id" required autofocus>
+        </div>
+
+        <div class="mt-2">
+          <label for="password" class="sr-only fs-4">Password</label>
+          <input type="password" id="password" name="password" class="form-control" placeholder="password" required>
+        </div>
+      </form>
+      <div class="text-center">
+        <button class="btn-lg btn-primary btn-block mt-3" onclick="login()">Login</button>
+      </div>
+      <div class="text-center">
+        계정이 없으시다면&nbsp;
+        <a href="/auth/sign-up">Sign Up</a>
+      </div>
+
+  </main>
+  <footer class="mt-auto text-white-50">
+    <p>Cover template for <a onclick="closePage()" class="text-white">Bootstrap</a>, by <a href="https://twitter.com/mdo" class="text-white">@mdo</a>.</p>
+  </footer>
+</div>
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" th:inline="javascript">
+
+    $('#unableLogin').hide();
+    function login() {
+        let RequestUserAccount = JSON.stringify({
+            email: $('#id').val(),
+            password: $('#password').val()
+        });
+
+        $.ajax({
+            url: '/login',
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: RequestUserAccount,
+            statusCode: {
+                200: function () {
+                    $('#unableLogin').hide();
+
+                    //비회원이 기존 사용하려는 서비스 페이지(/member/*)로 redirect
+                    location.replace("http://localhost:8090/order-service/health_check");
+                },
+                400: function () {
+                    $('#unableLogin').show();
+                }
+            }
+
+        });
+    }
+</script>
