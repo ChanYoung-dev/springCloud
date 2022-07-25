@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/user-service")
 public class TestController {
 
-    @GetMapping("/loginPage")
+    @GetMapping("/loginForm")
     public String loginForm(Model model) {
 
         return "loginForm";

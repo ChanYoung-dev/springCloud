@@ -28,7 +28,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByEmail(username);
-
+        if(!userEntity.getActivate())
+            throw new RuntimeException("탈퇴한 회원입니다");
         if(userEntity == null)
             throw new UsernameNotFoundException(username);
 
@@ -45,6 +46,7 @@ public class UserServiceImpl implements UserService {
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         UserEntity userEntity = mapper.map(userDto, UserEntity.class);
         userEntity.setEncryptedPwd(passwordEncoder.encode(userDto.getPwd()));
+        userEntity.setActivate(true);
         userRepository.save(userEntity);
 
         UserDto returnUserDto = mapper.map(userEntity, UserDto.class);

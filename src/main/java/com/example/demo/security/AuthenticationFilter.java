@@ -51,19 +51,22 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
-        try{
-            RequestLogin creds = new ObjectMapper().readValue(request.getInputStream(), RequestLogin.class);
 
-            return getAuthenticationManager().authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            creds.getEmail(),
-                            creds.getPassword(),
-                            new ArrayList<>()
-                    )
-            );
-        } catch(IOException e) {
-                throw new RuntimeException(e);
-        }
+        String email = request.getParameter("email");
+
+        String username = obtainUsername(request);//username 추출
+        String password = obtainPassword(request);
+        System.out.println("email = " + email);
+
+        //RequestLogin creds = new ObjectMapper().readValue(request.getInputStream(), RequestLogin.class);
+        RequestLogin creds = new RequestLogin(email, password);
+        return getAuthenticationManager().authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        creds.getEmail(),
+                        creds.getPassword(),
+                        new ArrayList<>()
+                )
+        );
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.example.demo.security;
 
 import com.example.demo.service.UserService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -10,7 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
@@ -32,10 +33,36 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         //http.authorizeRequests().antMatchers("/users/**").permitAll();
-        http.authorizeRequests().antMatchers("/**")
-                .hasIpAddress("127.0.0.1")
+
+
+//        http.authorizeRequests().antMatchers("/**")
+//                .hasIpAddress("127.0.0.1")
+//                .and()
+//                .addFilter(getAuthenticationFilter());
+//
+//        http.formLogin()
+//                .loginPage("/user-service/loginForm")
+//                .defaultSuccessUrl("/order-service/health_check")
+//                .usernameParameter("email")
+//                .passwordParameter("password").permitAll();
+        http
+                .authorizeRequests()
+                .anyRequest().permitAll()
                 .and()
-                .addFilter(getAuthenticationFilter());
+                .formLogin()//Form 로그인 인증 기능이 작동함
+                .loginPage("/user-service/loginForm")//사용자 정의 로그인 페이지
+                .defaultSuccessUrl("http://localhost:8090/order-service/health_check")//로그인 성공 후 이동 페이지
+                .failureUrl("/login.html?error=true")// 로그인 실패 후 이동 페이지
+                .usernameParameter("email")//아이디 파라미터명 설정
+                .passwordParameter("password")//패스워드 파라미터명 설정
+                .loginProcessingUrl("/login")//로그인 Form Action Url
+                .permitAll()
+                .and()
+                .addFilterBefore(new AuthenticationFilter(authenticationManager(), userService, env), UsernamePasswordAuthenticationFilter.class);//사용자 정의 로그인 페이지 접근 권한 승인
+
+
+
+
 
         http.headers().frameOptions().disable(); // for H2 frame
 
